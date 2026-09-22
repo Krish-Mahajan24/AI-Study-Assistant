@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StudyMate — AI Academic Companion</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Font Awesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              violet: '#8B5CF6',
+              cyan: '#06B6D4',
+              indigo: '#6366F1',
+              darkBg: '#070913',
+              cardBg: '#0E132B',
+              surface: '#0B0F1F',
+            }
+          },
+          boxShadow: {
+            'glow-violet': '0 0 45px -10px rgba(139, 92, 246, 0.35)',
+            'glow-cyan': '0 0 45px -10px rgba(6, 182, 212, 0.35)',
+            'glow-combo': '0 0 50px -10px rgba(99, 102, 241, 0.4)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- Base Custom Styling -->
+<style data-purpose="typography">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #070913;
+      color: #E2E8F0;
+      overflow-x: hidden;
+      letter-spacing: -0.015em;
+    }
+    ::selection {
+      background: #8B5CF6;
+      color: #ffffff;
+    }
+  </style>
+<style data-purpose="animations">
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.85; }
+    }
+    .pulse-ambient {
+      animation: pulse-glow 5s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#070913] text-slate-100 antialiased selection:bg-violet-600 selection:text-white">
+<!-- BEGIN: Navigation -->
+<header class="fixed top-5 inset-x-0 z-50 flex justify-center px-4">
+<nav class="w-full max-w-5xl rounded-full backdrop-blur-2xl bg-[#0e1227]/75 border border-white/10 px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-2xl transition-all duration-300">
+<!-- Brand Logo -->
+<a class="flex items-center gap-3 group" href="#hero">
+<img alt="StudyMate Logo" class="w-9 h-9 rounded-xl object-contain shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform" src="https://lh3.googleusercontent.com/aida/AEtjO1U_xT0JBGzSkT7ZcRIUyFRjUjjJmgzwH-9P4hUUy5cS-dzOawSEoMjQ7qxfjb-XAmqcjV9GFEg1U0RryS-eTd_l2-ZWM3mJNNOAFmTOOMRmCAeQxqAwTcq1VjCwbOlAeziE8hQ4Z2PFC__H99w9ATQ39ouKRPqL8Yx7n5c_5h-gHzdo44jxNbvf2BK276G9jjEUypz0Z_jccCoGVkYHWiLpgckiLRhJxlXva_UGn4t8R88XsfPVSwTNOVc"/>
+<div class="flex flex-col">
+<span class="font-bold text-base sm:text-lg tracking-tight text-white leading-none">StudyMate</span>
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold mt-0.5">AI Academic Companion</span>
+</div>
+</a>
+<!-- Navigation Links -->
+<div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+<a class="hover:text-white hover:text-cyan-300 transition-colors" href="#hero">Home</a>
+<a class="hover:text-white hover:text-cyan-300 transition-colors" href="#subjects">Subjects</a>
+<a class="hover:text-white hover:text-cyan-300 transition-colors" href="#features">Features</a>
+<a class="hover:text-white hover:text-cyan-300 transition-colors" href="#how-it-works">How It Works</a>
+</div>
+<!-- Action Button -->
+<div class="flex items-center">
+<a class="relative group overflow-hidden rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-cyan-500 p-[1px] shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:shadow-indigo-500/50" href="#tutor-interface">
+<div class="px-5 py-2 rounded-full bg-[#0E132B] transition duration-300 group-hover:bg-transparent">
+<span class="text-xs sm:text-sm font-semibold text-white flex items-center gap-1.5">
+              Open StudyMate <span class="group-hover:translate-x-0.5 transition-transform">→</span>
+</span>
+</div>
+</a>
+</div>
+</nav>
+</header>
+<!-- END: Navigation -->
+<main>
+<!-- BEGIN: HeroSection -->
+<section class="relative min-h-screen pt-32 pb-24 flex items-center justify-center overflow-hidden" id="hero">
+<!-- Background Image with Moody Vignette -->
+<div class="absolute inset-0 z-0">
+<img alt="Atmospheric University Library" class="w-full h-full object-cover object-center filter brightness-[0.42] contrast-[1.12]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbhAMobGoybOrvI0QoXbMJDNP8-OPEfytnVUyoLJTEgsgwnv1m1ct29myj5SXuvVq9cn0ktbPNQjuEXLKCw8icPJT42KOZ0aXEAOVozrChCa7CBNoCoDCYrFYRBj9QT0DCoq4GWBO5Mo32lvIWVcGlZ-Ppg1Xv3vJeYkrelv7n-RCwIfEJD88DtCb-tLznFLR6cKRE1o70NfbXuRP7GWLAqx8mu20ACLrC8OvtamesDbyz29cKsvQrxw"/>
+<!-- Ambient Radial & Linear Overlays -->
+<div class="absolute inset-0 bg-gradient-to-b from-[#070913]/90 via-[#070913]/60 to-[#070913]"></div>
+<div class="absolute inset-0 bg-radial from-transparent via-[#070913]/70 to-[#070913]"></div>
+</div>
+<div class="relative z-10 max-w-5xl mx-auto px-6 text-center flex flex-col items-center">
+<!-- Eyebrow Pill -->
+<div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 backdrop-blur-md mb-8">
+<span class="text-cyan-400 text-xs font-semibold tracking-widest uppercase">✦ AI-Powered University Learning</span>
+</div>
+<!-- Hero Headline -->
+<h1 class="reveal text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-[1.1] max-w-4xl mb-4">
+          Meet Your AI Study Companion.
+          <span class="block bg-gradient-to-r from-violet-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent font-medium mt-2">
+            Study smarter. Understand faster.
+          </span>
+</h1>
+<!-- Supporting Paragraph -->
+<p class="reveal max-w-2xl text-base sm:text-lg text-slate-300 leading-relaxed mt-4 mb-10 font-normal">
+          StudyMate helps university students understand difficult concepts, revise course material, prepare for exams, and test their knowledge — all from one intelligent study companion.
+        </p>
+<!-- CTAs -->
+<div class="reveal flex flex-col sm:flex-row items-center gap-4 mb-16">
+<a class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-semibold text-sm shadow-xl shadow-violet-500/25 transition-all duration-300 transform hover:-translate-y-0.5" href="#tutor-interface">
+            Open StudyMate →
+          </a>
+<a class="w-full sm:w-auto px-7 py-3.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/10 font-medium text-sm backdrop-blur-md transition-all" href="#subjects">
+            Explore Subjects ↓
+          </a>
+</div>
+<!-- Glass AI Conversation Preview -->
+<div class="reveal w-full max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5 sm:p-7 shadow-2xl text-left relative group">
+<div class="absolute -inset-0.5 bg-gradient-to-r from-violet-500/20 via-cyan-500/20 to-transparent rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition duration-1000"></div>
+<div class="relative space-y-4">
+<!-- Student Prompt -->
+<div class="flex items-start gap-3">
+<div class="w-7 h-7 rounded-full bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-xs text-indigo-300 font-bold shrink-0">
+                U
+              </div>
+<div class="bg-white/[0.05] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-slate-200">
+                "Explain subnetting in simple words."
+              </div>
+</div>
+<!-- AI Response -->
+<div class="flex items-start gap-3">
+<img alt="StudyMate" class="w-7 h-7 rounded-lg shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1U_xT0JBGzSkT7ZcRIUyFRjUjjJmgzwH-9P4hUUy5cS-dzOawSEoMjQ7qxfjb-XAmqcjV9GFEg1U0RryS-eTd_l2-ZWM3mJNNOAFmTOOMRmCAeQxqAwTcq1VjCwbOlAeziE8hQ4Z2PFC__H99w9ATQ39ouKRPqL8Yx7n5c_5h-gHzdo44jxNbvf2BK276G9jjEUypz0Z_jccCoGVkYHWiLpgckiLRhJxlXva_UGn4t8R88XsfPVSwTNOVc"/>
+<div class="space-y-2">
+<div class="bg-violet-950/40 border border-violet-500/20 rounded-2xl rounded-tl-sm p-4 text-sm text-slate-200 leading-relaxed shadow-inner">
+                  "Think of a network like a large apartment building with one main street address. Subnetting assigns unique floor and unit numbers so mail travels directly without disturbing the entire complex."
+                </div>
+<div class="inline-flex items-center gap-1.5 text-xs text-cyan-400 font-mono pl-1">
+<span>⚡ Grounded in your study material (RFC 791 / Ch. 4)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: HeroSection -->
+<!-- BEGIN: Section1Introduction -->
+<section class="py-28 px-6 relative overflow-hidden border-t border-white/5">
+<div class="max-w-6xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-6 reveal space-y-6">
+<span class="text-xs font-bold tracking-widest text-violet-400 uppercase">STUDY DIFFERENTLY</span>
+<h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
+              Your syllabus.<br/>
+              Your study material.<br/>
+<span class="bg-gradient-to-r from-violet-400 to-cyan-300 bg-clip-text text-transparent">Your AI tutor.</span>
+</h2>
+<p class="text-lg text-slate-300 leading-relaxed font-light">
+              StudyMate brings your academic material and AI assistance into one focused learning experience. No generic web searches. No detached answers. Pure academic alignment calibrated to your course outcomes.
+            </p>
+<div class="pt-4 flex items-center gap-4 text-sm text-slate-400">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-violet-600/50 border border-white/20 flex items-center justify-center text-xs text-white">✓</div>
+<div class="w-8 h-8 rounded-full bg-cyan-600/50 border border-white/20 flex items-center justify-center text-xs text-white">✓</div>
+<div class="w-8 h-8 rounded-full bg-indigo-600/50 border border-white/20 flex items-center justify-center text-xs text-white">✓</div>
+</div>
+<span>Syllabus indexed • Zero hallucinations • Context intact</span>
+</div>
+</div>
+<div class="lg:col-span-6 reveal">
+<div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl group">
+<img alt="Student focused studying" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr8PAAhE2R5kZjSVInzt6sSy6BhrNFLoheCyzgqphrpuv4NlbLp7ocBqrqQjFNafbQMatFJ1qM3MGhwQn1O6ZL3Gy9Zws9JOwukp03UnyZ3PqwXxxpN-UAxy3Hbu3SIJ98lZa0kZo-TTQeSV8fw_7B78vfehZAnDy-LG2-nCDJyGwnHBjMb2dhN_OYaWWgtkMHke8C8F_K3PjwOpsLWoE9bmmBrqIRuY8uirXUhz0hn81YmBTzKZ_OVw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#070913] via-transparent to-transparent"></div>
+<!-- Floating Frosted Overlay Note -->
+<div class="absolute bottom-6 inset-x-6 rounded-2xl bg-[#0E132B]/85 backdrop-blur-xl border border-white/10 p-5 shadow-2xl">
+<p class="text-xs uppercase tracking-wider text-cyan-400 font-semibold mb-1">Academic Context Engine</p>
+<p class="text-sm text-slate-200">Synthesizing textbook chapters, laboratory manuals, and lecture slides in continuous real-time sync.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section1Introduction -->
+<!-- BEGIN: Section2YourSubjects -->
+<section class="py-28 px-6 bg-[#070913] relative" id="subjects">
+<div class="max-w-6xl mx-auto">
+<div class="text-center max-w-2xl mx-auto mb-16 reveal">
+<span class="text-xs font-bold tracking-widest text-cyan-400 uppercase">ACADEMIC ALIGNMENT</span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 tracking-tight">Built around what YOU study.</h2>
+<p class="text-slate-400 mt-4 text-base">StudyMate is designed around your actual university curriculum.</p>
+</div>
+<!-- Asymmetric Editorial Grid (Strictly 6 Subjects) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Subject 1 -->
+<div class="reveal rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-violet-500/40 p-7 transition-all duration-300 group cursor-pointer">
+<div class="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-code text-lg"></i>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 group-hover:text-violet-300 transition-colors">Programming Abstraction</h3>
+<p class="text-sm text-slate-400 leading-relaxed">Master programming concepts, abstraction techniques, and core principles.</p>
+</div>
+<!-- Subject 2 -->
+<div class="reveal rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-cyan-500/40 p-7 transition-all duration-300 group cursor-pointer">
+<div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-brain text-lg"></i>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">Deep Neural Networks</h3>
+<p class="text-sm text-slate-400 leading-relaxed">Neural network architectures, training dynamics, loss functions, and deep representations.</p>
+</div>
+<!-- Subject 3 -->
+<div class="reveal rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-indigo-500/40 p-7 transition-all duration-300 group cursor-pointer">
+<div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-network-wired text-lg"></i>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">CNDC</h3>
+<p class="text-sm text-slate-400 leading-relaxed">Computer Networks &amp; Data Communication — protocols, addressing models, and layer architectures.</p>
+</div>
+<!-- Subject 4 -->
+<div class="reveal rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-violet-500/40 p-7 transition-all duration-300 group cursor-pointer">
+<div class="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-cubes text-lg"></i>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 group-hover:text-violet-300 transition-colors">System Design</h3>
+<p class="text-sm text-slate-400 leading-relaxed">Design scalable, fault-tolerant, high-throughput, and maintainable distributed software.</p>
+</div>
+<!-- Subject 5 -->
+<div class="reveal rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-cyan-500/40 p-7 transition-all duration-300 group cursor-pointer">
+<div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-comments text-lg"></i>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">NALR</h3>
+<p class="text-sm text-slate-400 leading-relaxed">Natural language representation, attention mechanisms, token embeddings, and modern NLP.</p>
+</div>
+<!-- Subject 6 -->
+<div class="reveal rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-indigo-500/40 p-7 transition-all duration-300 group cursor-pointer">
+<div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-server text-lg"></i>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Backend Engineering</h3>
+<p class="text-sm text-slate-400 leading-relaxed">Server-side runtime, transactional databases, secure APIs, and microservice infrastructure.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section2YourSubjects -->
+<!-- BEGIN: Section3WhatStudyMateDoes -->
+<section class="py-28 px-6 relative border-t border-white/5" id="features">
+<div class="max-w-6xl mx-auto">
+<div class="max-w-3xl mb-16 reveal">
+<span class="text-xs font-bold tracking-widest text-violet-400 uppercase">PURPOSE-BUILT WORKFLOWS</span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 tracking-tight">One AI. Four ways to study.</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- 01 Understand -->
+<div class="reveal rounded-3xl p-8 bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/10 hover:border-violet-500/30 transition-all duration-300">
+<span class="text-4xl font-extrabold text-violet-400/80 font-mono">01</span>
+<h3 class="text-2xl font-bold text-white mt-4 mb-3">Understand</h3>
+<p class="text-slate-400 text-base leading-relaxed">
+              Break difficult concepts into simple explanations. Get intuitive real-world metaphors tailored directly to foundational syllabus points.
+            </p>
+</div>
+<!-- 02 Revise -->
+<div class="reveal rounded-3xl p-8 bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/10 hover:border-cyan-500/30 transition-all duration-300">
+<span class="text-4xl font-extrabold text-cyan-400/80 font-mono">02</span>
+<h3 class="text-2xl font-bold text-white mt-4 mb-3">Revise</h3>
+<p class="text-slate-400 text-base leading-relaxed">
+              Turn your study material into concise revision notes. High-density summaries structured for immediate scanning and retention before classes.
+            </p>
+</div>
+<!-- 03 Practice -->
+<div class="reveal rounded-3xl p-8 bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/10 hover:border-indigo-500/30 transition-all duration-300">
+<span class="text-4xl font-extrabold text-indigo-400/80 font-mono">03</span>
+<h3 class="text-2xl font-bold text-white mt-4 mb-3">Practice</h3>
+<p class="text-slate-400 text-base leading-relaxed">
+              Test yourself with questions based on your coursework. Multiple-choice and open reasoning drills calibrated to your professor's syllabus criteria.
+            </p>
+</div>
+<!-- 04 Prepare -->
+<div class="reveal rounded-3xl p-8 bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/10 hover:border-violet-500/30 transition-all duration-300">
+<span class="text-4xl font-extrabold text-violet-400/80 font-mono">04</span>
+<h3 class="text-2xl font-bold text-white mt-4 mb-3">Prepare</h3>
+<p class="text-slate-400 text-base leading-relaxed">
+              Prepare for exams using important concepts, definitions, formulas, and practice questions curated into comprehensive rapid-prep kits.
+            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section3WhatStudyMateDoes -->
+<!-- BEGIN: Section4AITutorInterface -->
+<section class="py-28 px-6 bg-[#070913] relative overflow-hidden" id="tutor-interface">
+<!-- Ambient Backlight Aura -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-3xl pointer-events-none pulse-ambient"></div>
+<div class="max-w-4xl mx-auto relative z-10">
+<div class="text-center mb-14 reveal">
+<span class="text-xs font-bold tracking-widest text-cyan-400 uppercase">INTERACTIVE TUTORING</span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 tracking-tight">Ask anything about your course material.</h2>
+<p class="text-slate-400 mt-3 text-base">Real-time answers grounded directly in your uploaded syllabus and lecture slides.</p>
+</div>
+<!-- Tutor Interface Console -->
+<div class="reveal rounded-3xl border border-white/10 bg-[#0E132B]/75 backdrop-blur-2xl shadow-2xl p-6 sm:p-8 space-y-6">
+<!-- Top Bar -->
+<div class="flex items-center justify-between border-b border-white/5 pb-4">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-emerald-400/80 animate-pulse"></div>
+<span class="text-xs sm:text-sm font-semibold text-slate-300">Active Module: Computer Networks (CNDC)</span>
+</div>
+<span class="text-xs font-mono text-slate-500">Latency: 28ms</span>
+</div>
+<!-- Conversation Area -->
+<div class="space-y-6">
+<!-- User Prompt -->
+<div class="flex items-start gap-4 justify-end">
+<div class="bg-indigo-600/30 border border-indigo-400/30 rounded-2xl rounded-tr-none px-5 py-3 text-sm text-slate-100 max-w-xl">
+                Can you explain TCP's three-way handshake simply?
+              </div>
+<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white shrink-0">
+                A
+              </div>
+</div>
+<!-- Assistant Answer -->
+<div class="flex items-start gap-4">
+<img alt="StudyMate" class="w-8 h-8 rounded-lg shrink-0 mt-1" src="https://lh3.googleusercontent.com/aida/AEtjO1U_xT0JBGzSkT7ZcRIUyFRjUjjJmgzwH-9P4hUUy5cS-dzOawSEoMjQ7qxfjb-XAmqcjV9GFEg1U0RryS-eTd_l2-ZWM3mJNNOAFmTOOMRmCAeQxqAwTcq1VjCwbOlAeziE8hQ4Z2PFC__H99w9ATQ39ouKRPqL8Yx7n5c_5h-gHzdo44jxNbvf2BK276G9jjEUypz0Z_jccCoGVkYHWiLpgckiLRhJxlXva_UGn4t8R88XsfPVSwTNOVc"/>
+<div class="space-y-3 max-w-2xl">
+<div class="bg-white/[0.04] border border-white/10 rounded-2xl rounded-tl-none p-5 text-sm text-slate-200 leading-relaxed space-y-3">
+<p>Think of it as two computers introducing themselves before starting a conversation:</p>
+<ol class="space-y-2 list-decimal list-inside text-slate-300 pl-1 font-mono text-xs sm:text-sm">
+<li><strong class="text-cyan-300">SYN:</strong> "Hello, can you hear me?"</li>
+<li><strong class="text-violet-300">SYN-ACK:</strong> "Yes, I hear you loud and clear. Can you hear me?"</li>
+<li><strong class="text-emerald-300">ACK:</strong> "Yes! Connection established."</li>
+</ol>
+<p class="text-slate-300">Now data streams securely with zero lost packets.</p>
+</div>
+<div class="flex items-center gap-2 text-xs font-mono text-cyan-400">
+<i class="fa-solid fa-circle-check text-[11px]"></i>
+<span>GROUNDED IN YOUR STUDY MATERIAL • RFC 793 / LECTURE 06</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Prompt Input Bar -->
+<div class="pt-4 border-t border-white/5">
+<form class="relative flex items-center" onsubmit="event.preventDefault();">
+<input class="w-full bg-white/[0.03] border border-white/10 rounded-full py-4 pl-6 pr-32 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500/60 focus:ring-1 focus:ring-violet-500 transition-all" placeholder="Ask StudyMate anything about your course..." type="text"/>
+<button class="absolute right-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs font-semibold tracking-wide transition-all shadow-md shadow-violet-500/30" type="submit">
+                Send <i class="fa-solid fa-arrow-right ml-1"></i>
+</button>
+</form>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section4AITutorInterface -->
+<!-- BEGIN: Section5RAGArchitecture -->
+<section class="py-28 px-6 relative overflow-hidden border-t border-white/5">
+<!-- Background Neural Graphic Overlay -->
+<div class="absolute inset-0 z-0 opacity-25 mix-blend-screen pointer-events-none">
+<img alt="Neural Knowledge Mesh" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg0Yed29xTGohxNpTDIOM2ztv-OgWhH96ItFMmN_vGMSTE2Em4IojudwNacoaTG_JPOPPtHQslieo9ti9XbjOOLhs4F22Mvra1yoV5JtDcUlfe94oKiqORNgvMwWu6PnU07y4-FBMGOU8BeoXuKADwYtr9TzANS7tvQ20z0VnBmP2RKN7uwSXVMGPStV7LfhiEyWYPzAGKdjo302jEy2ZyKzRkbeCPHv0hRJO7MJNiA9gtUiaWCkpcrQ"/>
+</div>
+<div class="max-w-6xl mx-auto relative z-10">
+<div class="text-center max-w-2xl mx-auto mb-20 reveal">
+<span class="text-xs font-bold tracking-widest text-violet-400 uppercase">ZERO-HALLUCINATION PIPELINE</span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 tracking-tight">From material to answer.</h2>
+<p class="text-slate-400 mt-3 text-base">StudyMate retrieves relevant information from your connected academic material before generating an answer.</p>
+</div>
+<!-- Visual Horizontal RAG Pipeline -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+<!-- Step 1 -->
+<div class="reveal rounded-2xl bg-white/[0.03] border border-white/10 p-6 flex flex-col items-center text-center relative group hover:border-violet-500/40 transition-colors">
+<div class="w-12 h-12 rounded-full bg-violet-500/10 border border-violet-400/20 flex items-center justify-center text-violet-400 text-lg mb-4">
+<i class="fa-solid fa-book-open"></i>
+</div>
+<h4 class="text-base font-bold text-white mb-2">Your Study Material</h4>
+<p class="text-xs text-slate-400">PDFs, lecture slides, professor notes, and core textbook syllabi.</p>
+</div>
+<!-- Step 2 -->
+<div class="reveal rounded-2xl bg-white/[0.03] border border-white/10 p-6 flex flex-col items-center text-center relative group hover:border-cyan-500/40 transition-colors">
+<div class="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-400/20 flex items-center justify-center text-cyan-400 text-lg mb-4">
+<i class="fa-solid fa-database"></i>
+</div>
+<h4 class="text-base font-bold text-white mb-2">Foundry IQ Base</h4>
+<p class="text-xs text-slate-400">Semantic vector chunking and high-density indexing of concepts.</p>
+</div>
+<!-- Step 3 -->
+<div class="reveal rounded-2xl bg-white/[0.03] border border-white/10 p-6 flex flex-col items-center text-center relative group hover:border-indigo-500/40 transition-colors">
+<div class="w-12 h-12 rounded-full bg-indigo-500/10 border border-indigo-400/20 flex items-center justify-center text-indigo-400 text-lg mb-4">
+<i class="fa-solid fa-microchip"></i>
+</div>
+<h4 class="text-base font-bold text-white mb-2">StudyMate AI</h4>
+<p class="text-xs text-slate-400">Contextual synthesis paired with curriculum-level guardrails.</p>
+</div>
+<!-- Step 4 -->
+<div class="reveal rounded-2xl bg-white/[0.03] border border-white/10 p-6 flex flex-col items-center text-center relative group hover:border-emerald-500/40 transition-colors">
+<div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400 text-lg mb-4">
+<i class="fa-solid fa-shield-halved"></i>
+</div>
+<h4 class="text-base font-bold text-white mb-2">Grounded Answer</h4>
+<p class="text-xs text-slate-400">Accurate, citation-backed answers with zero guesswork.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section5RAGArchitecture -->
+<!-- BEGIN: Section6QuizExperience -->
+<section class="py-28 px-6 bg-[#070913] relative border-t border-white/5">
+<div class="max-w-4xl mx-auto">
+<div class="text-center mb-14 reveal">
+<span class="text-xs font-bold tracking-widest text-cyan-400 uppercase">ACTIVE RECALL</span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 tracking-tight">Don't just read. Test yourself.</h2>
+<p class="text-slate-400 mt-3 text-base">Validate your mastery with targeted drills drawn from your actual coursework.</p>
+</div>
+<!-- Quiz Container -->
+<div class="reveal rounded-3xl border border-white/10 bg-[#0E132B]/80 backdrop-blur-xl p-6 sm:p-10 shadow-2xl space-y-6">
+<div class="flex items-center justify-between pb-4 border-b border-white/5">
+<span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+              CNDC • Adaptive Drill
+            </span>
+<span class="text-xs text-slate-400 font-mono">Question 04 of 12</span>
+</div>
+<div>
+<h3 class="text-lg sm:text-xl font-bold text-white leading-snug">
+              Which OSI layer is responsible for packet routing, logical addressing, and path determination?
+            </h3>
+</div>
+<!-- Options Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+<!-- Option A -->
+<div class="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-sm text-slate-300 hover:bg-white/[0.06] hover:border-white/20 transition-all cursor-pointer flex items-center gap-3">
+<span class="w-6 h-6 rounded-md bg-white/5 text-slate-400 flex items-center justify-center font-mono text-xs">A</span>
+<span>Transport Layer</span>
+</div>
+<!-- Option B (Correct) -->
+<div class="rounded-xl border border-emerald-500/50 bg-emerald-950/20 p-4 text-sm text-emerald-200 transition-all cursor-pointer flex items-center justify-between shadow-lg shadow-emerald-950/40">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-md bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-mono text-xs font-bold">B</span>
+<span class="font-medium">Network Layer</span>
+</div>
+<i class="fa-solid fa-circle-check text-emerald-400"></i>
+</div>
+<!-- Option C -->
+<div class="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-sm text-slate-300 hover:bg-white/[0.06] hover:border-white/20 transition-all cursor-pointer flex items-center gap-3">
+<span class="w-6 h-6 rounded-md bg-white/5 text-slate-400 flex items-center justify-center font-mono text-xs">C</span>
+<span>Session Layer</span>
+</div>
+<!-- Option D -->
+<div class="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-sm text-slate-300 hover:bg-white/[0.06] hover:border-white/20 transition-all cursor-pointer flex items-center gap-3">
+<span class="w-6 h-6 rounded-md bg-white/5 text-slate-400 flex items-center justify-center font-mono text-xs">D</span>
+<span>Presentation Layer</span>
+</div>
+</div>
+<div class="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+<p class="text-xs text-slate-400 font-mono">Feedback: Instant citation with lecture slide reference</p>
+<button class="w-full sm:w-auto px-7 py-3 rounded-full bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 text-white text-xs font-bold tracking-wide transition-all shadow-lg shadow-violet-500/20">
+              Take a Quiz →
+            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section6QuizExperience -->
+<!-- BEGIN: Section7Revision -->
+<section class="py-28 px-6 relative border-t border-white/5">
+<div class="max-w-5xl mx-auto">
+<div class="text-center max-w-2xl mx-auto mb-16 reveal">
+<span class="text-xs font-bold tracking-widest text-violet-400 uppercase">HIGH RETENTION</span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 tracking-tight">Revision, without the clutter.</h2>
+<p class="text-slate-400 mt-3 text-base">Distilled knowledge organized for rapid recall.</p>
+</div>
+<div class="reveal rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-6 sm:p-10 backdrop-blur-xl">
+<div class="flex items-center justify-between border-b border-white/10 pb-6 mb-6">
+<div>
+<span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">Revision Kit</span>
+<h3 class="text-2xl font-bold text-white mt-1">CNDC — Quick Revision</h3>
+</div>
+<span class="text-xs px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">Unit 01 &amp; 02</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Key Concepts -->
+<div class="space-y-4">
+<h4 class="text-xs font-mono uppercase tracking-widest text-slate-400">Core Concepts</h4>
+<ul class="space-y-3 text-sm text-slate-200">
+<li class="flex items-start gap-2.5">
+<i class="fa-solid fa-angle-right text-violet-400 mt-1"></i>
+<span><strong>OSI 7-Layer Model:</strong> Encapsulation hierarchy from Physical wire to Application layer.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<i class="fa-solid fa-angle-right text-violet-400 mt-1"></i>
+<span><strong>TCP/IP Protocol Stack:</strong> Four functional tiers handling end-to-end reliability.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<i class="fa-solid fa-angle-right text-violet-400 mt-1"></i>
+<span><strong>Subnetting &amp; CIDR:</strong> Prefix masking technique for deterministic IP space partitioning.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<i class="fa-solid fa-angle-right text-violet-400 mt-1"></i>
+<span><strong>Error Detection &amp; CRC:</strong> Polynomial residue checking ensuring frame transmission integrity.</span>
+</li>
+</ul>
+</div>
+<!-- Important Definitions & Formulas -->
+<div class="space-y-4">
+<h4 class="text-xs font-mono uppercase tracking-widest text-slate-400">Formula &amp; Law Summary</h4>
+<div class="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+<span class="text-xs text-cyan-400 font-mono">Nyquist Bandwidth Formula:</span>
+<p class="text-sm font-mono text-slate-200">Max Data Rate = 2B · log₂(M)</p>
+<p class="text-xs text-slate-400">Calculates theoretical bit capacity over a noiseless channel with bandwidth B.</p>
+</div>
+<div class="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+<span class="text-xs text-violet-400 font-mono">Shannon Capacity Theorem:</span>
+<p class="text-sm font-mono text-slate-200">C = B · log₂(1 + SNR)</p>
+<p class="text-xs text-slate-400">Determines tight upper bound on transfer rate through a noisy channel.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section7Revision -->
+<!-- BEGIN: Section8ExamPreparation -->
+<section class="py-28 px-6 bg-[#070913] relative border-t border-white/5">
+<div class="max-w-6xl mx-auto">
+<div class="text-center max-w-2xl mx-auto mb-16 reveal">
+<span class="text-xs font-bold tracking-widest text-cyan-400 uppercase">FINAL SPRINT</span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 tracking-tight">Walk into your exam prepared.</h2>
+<p class="text-slate-400 mt-3 text-base">Comprehensive modular preparation designed to maximize exam confidence.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Pillar 1 -->
+<div class="reveal rounded-2xl bg-white/[0.02] border border-white/10 p-7 hover:border-violet-500/40 transition-colors">
+<div class="text-violet-400 text-2xl mb-4 font-mono">01</div>
+<h3 class="text-lg font-bold text-white mb-2">Important Concepts</h3>
+<p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              High-yield architectural foundations mapped precisely to recurrent exam themes.
+            </p>
+</div>
+<!-- Pillar 2 -->
+<div class="reveal rounded-2xl bg-white/[0.02] border border-white/10 p-7 hover:border-cyan-500/40 transition-colors">
+<div class="text-cyan-400 text-2xl mb-4 font-mono">02</div>
+<h3 class="text-lg font-bold text-white mb-2">Definitions</h3>
+<p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Crisp, textbook-standard definitions ready for short-answer exam prompts.
+            </p>
+</div>
+<!-- Pillar 3 -->
+<div class="reveal rounded-2xl bg-white/[0.02] border border-white/10 p-7 hover:border-indigo-500/40 transition-colors">
+<div class="text-indigo-400 text-2xl mb-4 font-mono">03</div>
+<h3 class="text-lg font-bold text-white mb-2">Formulas</h3>
+<p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Derivation steps, parameter tables, and boundary condition cheat sheets.
+            </p>
+</div>
+<!-- Pillar 4 -->
+<div class="reveal rounded-2xl bg-white/[0.02] border border-white/10 p-7 hover:border-violet-500/40 transition-colors">
+<div class="text-violet-400 text-2xl mb-4 font-mono">04</div>
+<h3 class="text-lg font-bold text-white mb-2">Practice Questions</h3>
+<p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Curated bank of past midterm and final examination scenarios with breakdowns.
+            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section8ExamPreparation -->
+<!-- BEGIN: Section9HowItWorks -->
+<section class="py-28 px-6 relative border-t border-white/5" id="how-it-works">
+<div class="max-w-6xl mx-auto">
+<div class="text-center max-w-2xl mx-auto mb-20 reveal">
+<span class="text-xs font-bold tracking-widest text-violet-400 uppercase">THE BLUEPRINT</span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 tracking-tight">How it works.</h2>
+<p class="text-slate-400 mt-3 text-base">Three intuitive steps from raw course notes to exam mastery.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+<!-- Step 1 -->
+<div class="reveal relative rounded-3xl bg-white/[0.02] border border-white/10 p-8">
+<div class="text-5xl font-black text-white/10 font-mono mb-6">01</div>
+<span class="text-xs font-bold text-cyan-400 uppercase tracking-widest block mb-2">UPLOAD</span>
+<h3 class="text-xl font-bold text-white mb-3">Sync Course Content</h3>
+<p class="text-sm text-slate-400 leading-relaxed">
+              Add your syllabus, lecture slides, and notes. StudyMate indexes and structures the material instantly.
+            </p>
+</div>
+<!-- Step 2 -->
+<div class="reveal relative rounded-3xl bg-white/[0.02] border border-white/10 p-8">
+<div class="text-5xl font-black text-white/10 font-mono mb-6">02</div>
+<span class="text-xs font-bold text-violet-400 uppercase tracking-widest block mb-2">ASK</span>
+<h3 class="text-xl font-bold text-white mb-3">Query Your Syllabus</h3>
+<p class="text-sm text-slate-400 leading-relaxed">
+              Ask StudyMate questions about difficult topics in your coursework and receive context-accurate insights.
+            </p>
+</div>
+<!-- Step 3 -->
+<div class="reveal relative rounded-3xl bg-white/[0.02] border border-white/10 p-8">
+<div class="text-5xl font-black text-white/10 font-mono mb-6">03</div>
+<span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">LEARN</span>
+<h3 class="text-xl font-bold text-white mb-3">Retain &amp; Test</h3>
+<p class="text-sm text-slate-400 leading-relaxed">
+              Understand, revise, and test your knowledge through quizzes and rapid revision notes until exam day.
+            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section9HowItWorks -->
+<!-- BEGIN: Section10FinalCTA -->
+<section class="py-32 px-6 relative overflow-hidden bg-gradient-to-b from-[#070913] via-[#0E132B] to-[#070913] border-t border-white/5">
+<div class="max-w-4xl mx-auto text-center relative z-10 space-y-6 reveal">
+<h2 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight">
+          Your next study session starts here.
+        </h2>
+<p class="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto font-light">
+          Understand more. Remember more. Prepare better.
+        </p>
+<div class="pt-6">
+<a class="inline-flex items-center gap-2 px-10 py-4 rounded-full bg-gradient-to-r from-indigo-500 via-violet-600 to-cyan-500 text-white font-bold text-base shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-300" href="#tutor-interface">
+            Open StudyMate →
+          </a>
+</div>
+</div>
+</section>
+<!-- END: Section10FinalCTA -->
+</main>
+<!-- BEGIN: Footer -->
+<footer class="py-14 px-6 border-t border-white/10 bg-[#070913]">
+<div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+<!-- Brand & Tagline -->
+<div class="flex items-center gap-4">
+<img alt="StudyMate Logo" class="w-8 h-8 rounded-lg" src="https://lh3.googleusercontent.com/aida/AEtjO1U_xT0JBGzSkT7ZcRIUyFRjUjjJmgzwH-9P4hUUy5cS-dzOawSEoMjQ7qxfjb-XAmqcjV9GFEg1U0RryS-eTd_l2-ZWM3mJNNOAFmTOOMRmCAeQxqAwTcq1VjCwbOlAeziE8hQ4Z2PFC__H99w9ATQ39ouKRPqL8Yx7n5c_5h-gHzdo44jxNbvf2BK276G9jjEUypz0Z_jccCoGVkYHWiLpgckiLRhJxlXva_UGn4t8R88XsfPVSwTNOVc"/>
+<div>
+<span class="font-bold text-white text-base">StudyMate</span>
+<p class="text-xs text-slate-400">Your AI-powered study companion.</p>
+</div>
+</div>
+<!-- Links -->
+<div class="flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-slate-400">
+<a class="hover:text-white transition-colors" href="#hero">Home</a>
+<a class="hover:text-white transition-colors" href="#subjects">Subjects</a>
+<a class="hover:text-white transition-colors" href="#features">Features</a>
+<a class="hover:text-white transition-colors" href="#how-it-works">How It Works</a>
+</div>
+<!-- University Student Note -->
+<div class="text-xs text-slate-500 font-mono">
+        Built for university students.
+      </div>
+</div>
+</footer>
+<!-- END: Footer -->
+<!-- BEGIN: Scripts -->
+<script data-purpose="scroll-animations">
+    // Scroll reveal observer
+    document.addEventListener('DOMContentLoaded', () => {
+      const reveals = document.querySelectorAll('.reveal');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      reveals.forEach(el => observer.observe(el));
+    });
+  </script>
+<!-- END: Scripts -->
+</body></html>
